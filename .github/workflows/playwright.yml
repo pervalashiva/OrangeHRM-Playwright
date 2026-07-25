@@ -19,6 +19,7 @@ on:
           - invalid-credentials
           - empty-credentials
           - forgot-password
+          - add-user
       headed:
         description: 'Run headed (visible browser) — usually leave false in CI'
         required: false
@@ -84,6 +85,9 @@ jobs:
               ;;
             forgot-password)
               CMD="npx playwright test -g \"should navigate to forgot password page\" $HEADED_FLAG"
+              ;;
+            add-user)
+              CMD="npx playwright test -g \"should add a new system user after login via Admin > Add\" $HEADED_FLAG"
               ;;
             *)
               echo "Unknown selection: $SELECTION"

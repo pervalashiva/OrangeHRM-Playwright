@@ -29,6 +29,7 @@ npm run test:valid-login
 npm run test:invalid-login
 npm run test:empty-credentials
 npm run test:forgot-password
+npm run test:add-user
 ```
 
 ### Reports
@@ -51,7 +52,7 @@ npm run test:ui       # Playwright UI mode
 2. Click **Run workflow**
 3. Choose:
    - `all` — full suite
-   - or a single case (`launch-login-page`, `valid-login`, `invalid-credentials`, `empty-credentials`, `forgot-password`)
+   - or a single case (`launch-login-page`, `valid-login`, `invalid-credentials`, `empty-credentials`, `forgot-password`, `add-user`)
 4. After **every** run, download artifacts (even if tests fail):
    - `allure-report-*` — open `index.html` in a browser
    - `allure-results-*` — raw Allure data
@@ -79,5 +80,6 @@ playwright.config.ts              # Base URL, browser, Allure reporter
 | `invalid-credentials` | `test:invalid-login` | Asserts "Invalid credentials" error |
 | `empty-credentials` | `test:empty-credentials` | Asserts Required field messages |
 | `forgot-password` | `test:forgot-password` | Navigates to reset password page |
+| `add-user` | `test:add-user` | Login → Admin → Add User → save + assert |
 
 Demo credentials (public OrangeHRM sample): `Admin` / `admin123`

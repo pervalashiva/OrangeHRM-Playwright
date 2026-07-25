@@ -12,6 +12,7 @@
     "test:invalid-login": "playwright test -g \"should show error for invalid credentials\"",
     "test:empty-credentials": "playwright test -g \"should show required field validation when credentials are empty\"",
     "test:forgot-password": "playwright test -g \"should navigate to forgot password page\"",
+    "test:add-user": "playwright test -g \"should add a new system user after login via Admin > Add\"",
     "report": "playwright show-report",
     "allure:generate": "allure generate allure-results --clean -o allure-report",
     "allure:open": "allure open allure-report",
