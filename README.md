@@ -25,6 +25,14 @@ npm run test:ui
 npm run report
 ```
 
+## Project structure
+
+```
+pages/LoginPage.ts   # Page Object for the login screen
+tests/login.spec.ts  # Launch + login test cases
+playwright.config.ts # Base URL and browser config
+```
+
 ## Test coverage
 
 | Test | Description |

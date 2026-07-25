@@ -1,22 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
 
-const browsersPath =
-  process.env.PLAYWRIGHT_BROWSERS_PATH ||
-  path.join(os.homedir(), 'Library', 'Caches', 'ms-playwright');
-
-const chromiumExecutable = path.join(
-  browsersPath,
-  'chromium-1208',
-  'chrome-mac-arm64',
-  'Google Chrome for Testing.app',
-  'Contents',
-  'MacOS',
-  'Google Chrome for Testing'
-);
-
+/**
+ * Playwright config for OrangeHRM demo automation.
+ * Docs: https://playwright.dev/docs/test-configuration
+ */
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -35,12 +22,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        launchOptions: fs.existsSync(chromiumExecutable)
-          ? { executablePath: chromiumExecutable }
-          : undefined,
-      },
+      use: { ...devices['Desktop Chrome'] },
     },
   ],
 });
