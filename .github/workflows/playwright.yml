@@ -41,11 +41,20 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Setup Java (required for Allure CLI)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
       - name: Install dependencies
         run: npm ci
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
+
+      - name: Clean previous Allure results
+        run: rm -rf allure-results allure-report
 
       - name: Resolve test command
         id: resolve
@@ -87,7 +96,30 @@ jobs:
           echo "Running: $CMD"
 
       - name: Run tests
+        id: tests
+        continue-on-error: true
         run: ${{ steps.resolve.outputs.cmd }}
+
+      - name: Generate Allure report
+        if: ${{ !cancelled() }}
+        run: npx allure generate allure-results --clean -o allure-report
+
+      - name: Upload Allure report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-${{ steps.resolve.outputs.selection }}-${{ github.run_id }}
+          path: allure-report/
+          retention-days: 30
+
+      - name: Upload Allure raw results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ steps.resolve.outputs.selection }}-${{ github.run_id }}
+          path: allure-results/
+          retention-days: 30
+          if-no-files-found: warn
 
       - name: Upload Playwright HTML report
         if: ${{ !cancelled() }}
@@ -96,6 +128,7 @@ jobs:
           name: playwright-report-${{ steps.resolve.outputs.selection }}-${{ github.run_id }}
           path: playwright-report/
           retention-days: 14
+          if-no-files-found: ignore
 
       - name: Upload test results (screenshots/videos/traces)
         if: ${{ !cancelled() }}
@@ -105,3 +138,9 @@ jobs:
           path: test-results/
           retention-days: 14
           if-no-files-found: ignore
+
+      - name: Fail job if tests failed
+        if: ${{ steps.tests.outcome == 'failure' }}
+        run: |
+          echo "Tests failed. Allure report was still generated and uploaded."
+          exit 1

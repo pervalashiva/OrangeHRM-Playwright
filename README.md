@@ -9,6 +9,8 @@ npm install
 npx playwright install chromium
 ```
 
+Java is required only if you generate Allure reports locally (`allure-commandline`).
+
 ## Run tests locally
 
 ### Full suite
@@ -29,12 +31,18 @@ npm run test:empty-credentials
 npm run test:forgot-password
 ```
 
-### Other
+### Reports
+
+```bash
+npm run report           # Playwright HTML report
+npm run allure:generate  # build Allure HTML from allure-results
+npm run allure:open      # open Allure report
+npm run allure:report    # generate + open Allure
+```
 
 ```bash
 npm run test:headed   # browser visible
 npm run test:ui       # Playwright UI mode
-npm run report        # open HTML report
 ```
 
 ## Run tests via GitHub Actions
@@ -44,8 +52,10 @@ npm run report        # open HTML report
 3. Choose:
    - `all` — full suite
    - or a single case (`launch-login-page`, `valid-login`, `invalid-credentials`, `empty-credentials`, `forgot-password`)
-4. After the run, download artifacts:
-   - `playwright-report-*` — HTML report
+4. After **every** run, download artifacts (even if tests fail):
+   - `allure-report-*` — open `index.html` in a browser
+   - `allure-results-*` — raw Allure data
+   - `playwright-report-*` — Playwright HTML report
    - `test-results-*` — screenshots / videos / traces on failure
 
 The same workflow also runs automatically on pushes to `main` / `feature/**` and on pull requests.
@@ -53,10 +63,10 @@ The same workflow also runs automatically on pushes to `main` / `feature/**` and
 ## Project structure
 
 ```
-.github/workflows/playwright.yml  # CI: suite + individual cases
+.github/workflows/playwright.yml  # CI: suite + individual cases + Allure
 pages/LoginPage.ts                # Page Object for the login screen
 tests/login.spec.ts               # Launch + login test cases
-playwright.config.ts              # Base URL and browser config
+playwright.config.ts              # Base URL, browser, Allure reporter
 ```
 
 ## Test coverage
