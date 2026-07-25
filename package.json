@@ -1,0 +1,23 @@
+{
+  "name": "orangehrm-playwright",
+  "version": "1.0.0",
+  "description": "Playwright TypeScript automation for OrangeHRM demo",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "orangehrm",
+    "automation"
+  ],
+  "author": "pervalashiva",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "typescript": "^5.8.3"
+  }
+}
