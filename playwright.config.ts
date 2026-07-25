@@ -1,4 +1,21 @@
 import { defineConfig, devices } from '@playwright/test';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+
+const browsersPath =
+  process.env.PLAYWRIGHT_BROWSERS_PATH ||
+  path.join(os.homedir(), 'Library', 'Caches', 'ms-playwright');
+
+const chromiumExecutable = path.join(
+  browsersPath,
+  'chromium-1208',
+  'chrome-mac-arm64',
+  'Google Chrome for Testing.app',
+  'Contents',
+  'MacOS',
+  'Google Chrome for Testing'
+);
 
 export default defineConfig({
   testDir: './tests',
@@ -20,9 +37,8 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        // Use cached Chromium when the matching Playwright browser is unavailable
-        launchOptions: process.env.PW_CHROMIUM_PATH
-          ? { executablePath: process.env.PW_CHROMIUM_PATH }
+        launchOptions: fs.existsSync(chromiumExecutable)
+          ? { executablePath: chromiumExecutable }
           : undefined,
       },
     },
