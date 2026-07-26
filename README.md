@@ -2,6 +2,8 @@
 
 Playwright + TypeScript UI automation for the [OrangeHRM demo login](https://opensource-demo.orangehrmlive.com/web/index.php/auth/login).
 
+The shared demo sometimes opens in another language. Tests force English via Playwright `locale` / `Accept-Language` and by selecting **English** on the login page language dropdown.
+
 ## Setup
 
 ```bash

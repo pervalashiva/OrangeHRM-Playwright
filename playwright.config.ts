@@ -23,6 +23,7 @@ export default defineConfig({
         environmentInfo: {
           node_version: process.version,
           base_url: 'https://opensource-demo.orangehrmlive.com',
+          locale: 'en-US',
           ci: process.env.CI ? 'true' : 'false',
         },
       },
@@ -31,6 +32,12 @@ export default defineConfig({
   timeout: 60_000,
   use: {
     baseURL: 'https://opensource-demo.orangehrmlive.com',
+    // Force English so the shared demo does not open in another language
+    locale: 'en-US',
+    timezoneId: 'UTC',
+    extraHTTPHeaders: {
+      'Accept-Language': 'en-US,en;q=0.9',
+    },
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
