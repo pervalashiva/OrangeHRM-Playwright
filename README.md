@@ -36,6 +36,7 @@ npm run test:invalid-login
 npm run test:empty-credentials
 npm run test:forgot-password
 npm run test:add-user
+npm run test:add-job-title
 ```
 
 ### Reports
@@ -58,7 +59,7 @@ npm run test:ui       # Playwright UI mode
 2. Click **Run workflow**
 3. Choose:
    - `all` — full suite
-   - or a single case (`launch-login-page`, `valid-login`, `invalid-credentials`, `empty-credentials`, `forgot-password`, `add-user`)
+   - or a single case (`launch-login-page`, `valid-login`, `invalid-credentials`, `empty-credentials`, `forgot-password`, `add-user`, `add-job-title`)
 4. After **every** run, download artifacts (even if tests fail):
    - `allure-report-*` — open `index.html` in a browser
    - `allure-results-*` — raw Allure data
@@ -72,8 +73,9 @@ The same workflow also runs automatically on pushes to `main` / `feature/**` and
 ```
 .github/workflows/playwright.yml  # CI: suite + individual cases + Allure
 fixtures/test.ts                  # Forces English via i18n API intercept
-pages/LoginPage.ts                # Page Object for the login screen
-tests/login.spec.ts               # Launch + login test cases
+pages/                            # Page Objects (Login, Admin, Job Titles, ...)
+tests/                            # Spec files
+test-data/job-specification.txt   # Dummy file for Job Specification upload
 playwright.config.ts              # Base URL, browser, Allure reporter
 ```
 
@@ -88,5 +90,6 @@ playwright.config.ts              # Base URL, browser, Allure reporter
 | `empty-credentials` | `test:empty-credentials` | Asserts Required field messages |
 | `forgot-password` | `test:forgot-password` | Navigates to reset password page |
 | `add-user` | `test:add-user` | Login → Admin → Add User → save + assert |
+| `add-job-title` | `test:add-job-title` | Login → Admin → Job Titles → Add → upload + save |
 
 Demo credentials (public OrangeHRM sample): `Admin` / `admin123`

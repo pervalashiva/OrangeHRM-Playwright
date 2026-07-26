@@ -20,6 +20,7 @@ on:
           - empty-credentials
           - forgot-password
           - add-user
+          - add-job-title
       headed:
         description: 'Run headed (visible browser) — usually leave false in CI'
         required: false
@@ -88,6 +89,9 @@ jobs:
               ;;
             add-user)
               CMD="npx playwright test -g \"should add a new system user after login via Admin > Add\" $HEADED_FLAG"
+              ;;
+            add-job-title)
+              CMD="npx playwright test -g \"should add a job title with details, file upload, save and verify\" $HEADED_FLAG"
               ;;
             *)
               echo "Unknown selection: $SELECTION"

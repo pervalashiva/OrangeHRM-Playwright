@@ -1,0 +1,3 @@
+OrangeHRM automation dummy job specification
+Generated for Playwright Add Job Title test.
+Accepts up to 1MB — this file is intentionally small.
