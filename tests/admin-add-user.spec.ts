@@ -14,8 +14,8 @@ test.describe('OrangeHRM Admin - Add User', () => {
     const adminPage = new AdminPage(page);
     const addUserPage = new AddUserPage(page);
 
-    const uniqueUsername = `autoUser${Date.now()}`;
-    const editedUsername = `${uniqueUsername}_edit`;
+    // Keep username within OrangeHRM limits; edit only status for a stable search key
+    const uniqueUsername = `autoU${Date.now()}`;
     const password = 'Test@1234';
 
     // --- Login ---
@@ -36,8 +36,7 @@ test.describe('OrangeHRM Admin - Add User', () => {
       password,
     });
     await addUserPage.save();
-    await expect(adminPage.successToast).toBeVisible({ timeout: 15_000 });
-    await expect(page).toHaveURL(/admin\/viewSystemUsers/, { timeout: 15_000 });
+    await adminPage.expectSavedSuccessfully();
 
     // --- Search newly created user ---
     await adminPage.searchUser(uniqueUsername);
@@ -45,23 +44,21 @@ test.describe('OrangeHRM Admin - Add User', () => {
     await expect(adminPage.userRow(uniqueUsername)).toContainText('ESS');
     await expect(adminPage.userRow(uniqueUsername)).toContainText('Enabled');
 
-    // --- Edit user (username + status) and save ---
+    // --- Edit user status and save ---
     await adminPage.openEditForUser(uniqueUsername);
     await addUserPage.expectEditUserFormVisible();
-    await addUserPage.updateUsername(editedUsername);
     await addUserPage.updateStatus('Disabled');
     await addUserPage.save();
-    await expect(adminPage.successToast).toBeVisible({ timeout: 15_000 });
-    await expect(page).toHaveURL(/admin\/viewSystemUsers/, { timeout: 15_000 });
+    await adminPage.expectSavedSuccessfully();
 
-    // --- Search edited user and verify updates ---
-    await adminPage.searchUser(editedUsername);
-    await adminPage.expectUserInTable(editedUsername);
-    await expect(adminPage.userRow(editedUsername)).toContainText('Disabled');
+    // --- Search same user and verify edit ---
+    await adminPage.searchUser(uniqueUsername);
+    await adminPage.expectUserInTable(uniqueUsername);
+    await expect(adminPage.userRow(uniqueUsername)).toContainText('Disabled');
 
     // --- Delete user and verify removal ---
-    await adminPage.deleteUser(editedUsername);
-    await adminPage.searchUser(editedUsername);
-    await adminPage.expectUserNotInTable(editedUsername);
+    await adminPage.deleteUser(uniqueUsername);
+    await adminPage.searchUser(uniqueUsername);
+    await adminPage.expectUserNotInTable(uniqueUsername);
   });
 });

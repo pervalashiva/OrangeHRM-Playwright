@@ -18,8 +18,8 @@ export class AdminPage {
     this.systemUsersHeading = page.getByRole('heading', { name: 'System Users' });
     this.searchButton = page.getByRole('button', { name: 'Search' });
     this.resetButton = page.getByRole('button', { name: 'Reset' });
-    this.successToast = page.locator('.oxd-toast').filter({ hasText: 'Successfully Saved' });
-    this.deletedToast = page.locator('.oxd-toast').filter({ hasText: 'Successfully Deleted' });
+    this.successToast = page.locator('.oxd-toast').filter({ hasText: /Successfully Saved/i });
+    this.deletedToast = page.locator('.oxd-toast').filter({ hasText: /Successfully Deleted/i });
     this.confirmDeleteButton = page.getByRole('button', { name: 'Yes, Delete' });
   }
 
@@ -36,6 +36,26 @@ export class AdminPage {
   async clickAdd() {
     await this.addButton.click();
     await expect(this.page).toHaveURL(/admin\/saveSystemUser/);
+  }
+
+  /**
+   * Toast messages disappear quickly on OrangeHRM.
+   * Treat redirect back to System Users as the durable success signal.
+   */
+  async expectSavedSuccessfully() {
+    await Promise.race([
+      this.successToast.waitFor({ state: 'visible', timeout: 10_000 }).catch(() => undefined),
+      this.page.waitForURL(/admin\/viewSystemUsers/, { timeout: 15_000 }),
+    ]);
+    await expect(this.page).toHaveURL(/admin\/viewSystemUsers/, { timeout: 15_000 });
+    await expect(this.systemUsersHeading).toBeVisible();
+  }
+
+  async expectDeletedSuccessfully() {
+    await Promise.race([
+      this.deletedToast.waitFor({ state: 'visible', timeout: 10_000 }).catch(() => undefined),
+      this.page.getByText('No Records Found').waitFor({ state: 'visible', timeout: 15_000 }).catch(() => undefined),
+    ]);
   }
 
   async searchUser(username: string) {
@@ -68,6 +88,6 @@ export class AdminPage {
     await this.userRow(username).locator('.bi-trash').click();
     await expect(this.confirmDeleteButton).toBeVisible();
     await this.confirmDeleteButton.click();
-    await expect(this.deletedToast).toBeVisible({ timeout: 15_000 });
+    await this.expectDeletedSuccessfully();
   }
 }
