@@ -2,12 +2,9 @@
 
 Playwright + TypeScript UI automation for the [OrangeHRM demo login](https://opensource-demo.orangehrmlive.com/web/index.php/auth/login).
 
-The shared demo often opens in another language (e.g. Spanish). Tests force English by:
-1. Browser `locale` + `Accept-Language: en-US`
-2. Disabling Chrome Translate
-3. Selecting **English (United States)** from the login language dropdown before interacting
+The shared demo often serves Spanish (or another language) because admin default localization is changed by other users. OrangeHRM OS 5.9 login has **no language dropdown** — UI text comes from `/core/i18n/messages`.
 
-If you open the site manually in Chrome and see Spanish, turn off Google Translate (translate icon in the address bar) and pick English from the language dropdown at the bottom of the login page.
+Tests force English by intercepting that API and requesting `?locale=en_US` (see `fixtures/test.ts`).
 
 ## Setup
 
@@ -72,6 +69,7 @@ The same workflow also runs automatically on pushes to `main` / `feature/**` and
 
 ```
 .github/workflows/playwright.yml  # CI: suite + individual cases + Allure
+fixtures/test.ts                  # Forces English via i18n API intercept
 pages/LoginPage.ts                # Page Object for the login screen
 tests/login.spec.ts               # Launch + login test cases
 playwright.config.ts              # Base URL, browser, Allure reporter

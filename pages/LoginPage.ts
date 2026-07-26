@@ -12,60 +12,37 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    // name= attributes are language-independent (Spanish uses different placeholders/labels)
+    // Prefer language-independent selectors; English placeholders work after i18n force
     this.usernameInput = page.locator('input[name="username"]');
     this.passwordInput = page.locator('input[name="password"]');
-    this.loginButton = page.locator('button[type="submit"]');
+    this.loginButton = page.getByRole('button', { name: 'Login' });
     this.loginTitle = page.getByRole('heading', { name: 'Login' });
     this.orangeHrmLogo = page.locator('img[alt="company-branding"]');
     this.errorAlert = page.locator('.oxd-alert-content-text');
     this.forgotPasswordLink = page.getByText('Forgot your password?');
   }
 
-  async goto() {
-    await this.page.goto('/web/index.php/auth/login', { waitUntil: 'domcontentloaded' });
-    await this.ensureEnglishLanguage();
+  /**
+   * Ensure i18n messages load in English.
+   * OS 5.9 login has no language dropdown; strings come from /core/i18n/messages.
+   */
+  async forceEnglishI18n() {
+    await this.page.unroute(/\/core\/i18n\/messages/).catch(() => undefined);
+    await this.page.route(/\/core\/i18n\/messages/, async (route) => {
+      const url = new URL(route.request().url());
+      url.searchParams.set('locale', 'en_US');
+      await route.continue({ url: url.toString() });
+    });
   }
 
-  /**
-   * Shared demo default language is often changed by other users (e.g. Spanish).
-   * Always switch the login-page language dropdown to English before assertions.
-   */
-  async ensureEnglishLanguage() {
-    await this.usernameInput.waitFor({ state: 'visible', timeout: 30_000 });
-
-    const alreadyEnglish = await this.page
-      .getByRole('button', { name: /^Login$/i })
-      .isVisible()
-      .catch(() => false);
-
-    if (alreadyEnglish) {
-      return;
-    }
-
-    // Login page has a single oxd language select (usually at the bottom)
-    const languageDropdown = this.page.locator('.oxd-select-text').last();
-    await expect(languageDropdown, 'Language dropdown should be visible on login page').toBeVisible({
-      timeout: 15_000,
-    });
-    await languageDropdown.scrollIntoViewIfNeeded();
-    await languageDropdown.click();
-
-    const englishOption = this.page
-      .locator('.oxd-select-dropdown .oxd-select-option, [role="listbox"] [role="option"]')
-      .filter({ hasText: /English\s*\(United States\)|^\s*English\s*$/i })
-      .first();
-
-    await expect(englishOption, 'English language option should appear').toBeVisible({ timeout: 10_000 });
-    await englishOption.click();
-
-    // OrangeHRM reloads translations after language change
-    await expect(this.page.getByRole('button', { name: /^Login$/i })).toBeVisible({ timeout: 20_000 });
-    await expect(this.usernameInput).toHaveAttribute('placeholder', 'Username', { timeout: 20_000 });
+  async goto() {
+    await this.forceEnglishI18n();
+    await this.page.goto('/web/index.php/auth/login', { waitUntil: 'domcontentloaded' });
+    await expect(this.loginButton).toBeVisible({ timeout: 30_000 });
+    await expect(this.usernameInput).toHaveAttribute('placeholder', 'Username');
   }
 
   async login(username: string, password: string) {
-    await this.ensureEnglishLanguage();
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
@@ -73,9 +50,10 @@ export class LoginPage {
 
   async expectLoginPageLoaded() {
     await expect(this.page).toHaveURL(/auth\/login/);
-    await expect(this.page.getByRole('heading', { name: 'Login' })).toBeVisible();
+    await expect(this.loginTitle).toBeVisible();
     await expect(this.usernameInput).toBeVisible();
     await expect(this.passwordInput).toBeVisible();
-    await expect(this.page.getByRole('button', { name: /^Login$/i })).toBeVisible();
+    await expect(this.loginButton).toBeVisible();
+    await expect(this.loginButton).toHaveText(/^\s*Login\s*$/);
   }
 }

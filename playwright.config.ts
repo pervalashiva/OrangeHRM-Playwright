@@ -32,13 +32,12 @@ export default defineConfig({
   timeout: 60_000,
   use: {
     baseURL: 'https://opensource-demo.orangehrmlive.com',
-    // Prefer English; LoginPage also selects English from the UI dropdown
+    // Browser locale alone is not enough; fixtures/test.ts forces i18n locale=en_US
     locale: 'en-US',
     timezoneId: 'UTC',
     extraHTTPHeaders: {
       'Accept-Language': 'en-US,en;q=0.9',
     },
-    // Prevent Chrome from auto-translating the page into another language
     launchOptions: {
       args: ['--disable-features=Translate,TranslateUI', '--disable-translate'],
     },
