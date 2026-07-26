@@ -32,11 +32,15 @@ export default defineConfig({
   timeout: 60_000,
   use: {
     baseURL: 'https://opensource-demo.orangehrmlive.com',
-    // Force English so the shared demo does not open in another language
+    // Prefer English; LoginPage also selects English from the UI dropdown
     locale: 'en-US',
     timezoneId: 'UTC',
     extraHTTPHeaders: {
       'Accept-Language': 'en-US,en;q=0.9',
+    },
+    // Prevent Chrome from auto-translating the page into another language
+    launchOptions: {
+      args: ['--disable-features=Translate,TranslateUI', '--disable-translate'],
     },
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -50,3 +54,4 @@ export default defineConfig({
     },
   ],
 });
+

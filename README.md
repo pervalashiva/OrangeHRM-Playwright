@@ -2,7 +2,12 @@
 
 Playwright + TypeScript UI automation for the [OrangeHRM demo login](https://opensource-demo.orangehrmlive.com/web/index.php/auth/login).
 
-The shared demo sometimes opens in another language. Tests force English via Playwright `locale` / `Accept-Language` and by selecting **English** on the login page language dropdown.
+The shared demo often opens in another language (e.g. Spanish). Tests force English by:
+1. Browser `locale` + `Accept-Language: en-US`
+2. Disabling Chrome Translate
+3. Selecting **English (United States)** from the login language dropdown before interacting
+
+If you open the site manually in Chrome and see Spanish, turn off Google Translate (translate icon in the address bar) and pick English from the language dropdown at the bottom of the login page.
 
 ## Setup
 
