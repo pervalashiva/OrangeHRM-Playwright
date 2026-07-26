@@ -51,10 +51,15 @@ export class AdminPage {
     await expect(this.systemUsersHeading).toBeVisible();
   }
 
+  /** Table empty-state uses <span>; toast uses <p> — keep them distinct for strict mode */
+  private get noRecordsInTable() {
+    return this.page.locator('span.oxd-text').filter({ hasText: /^No Records Found$/ });
+  }
+
   async expectDeletedSuccessfully() {
     await Promise.race([
       this.deletedToast.waitFor({ state: 'visible', timeout: 10_000 }).catch(() => undefined),
-      this.page.getByText('No Records Found').waitFor({ state: 'visible', timeout: 15_000 }).catch(() => undefined),
+      this.noRecordsInTable.waitFor({ state: 'visible', timeout: 15_000 }).catch(() => undefined),
     ]);
   }
 
@@ -74,7 +79,7 @@ export class AdminPage {
   }
 
   async expectUserNotInTable(username: string) {
-    await expect(this.page.getByText('No Records Found')).toBeVisible({ timeout: 15_000 });
+    await expect(this.noRecordsInTable).toBeVisible({ timeout: 15_000 });
     await expect(this.userRow(username)).toHaveCount(0);
   }
 
