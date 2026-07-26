@@ -6,6 +6,8 @@ The shared demo often serves Spanish (or another language) because admin default
 
 Tests force English by intercepting that API and requesting `?locale=en_US` (see `fixtures/test.ts`).
 
+Browser password / “data breach” popups are disabled via Chromium launch flags so they do not block later tests. Prefer Playwright Chromium (`npm run test:headed`), not system Google Chrome with a signed-in profile.
+
 ## Setup
 
 ```bash

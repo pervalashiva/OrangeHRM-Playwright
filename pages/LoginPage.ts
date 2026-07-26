@@ -9,10 +9,10 @@ export class LoginPage {
   readonly orangeHrmLogo: Locator;
   readonly errorAlert: Locator;
   readonly forgotPasswordLink: Locator;
+  readonly csrfError: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    // Prefer language-independent selectors; English placeholders work after i18n force
     this.usernameInput = page.locator('input[name="username"]');
     this.passwordInput = page.locator('input[name="password"]');
     this.loginButton = page.getByRole('button', { name: 'Login' });
@@ -20,6 +20,7 @@ export class LoginPage {
     this.orangeHrmLogo = page.locator('img[alt="company-branding"]');
     this.errorAlert = page.locator('.oxd-alert-content-text');
     this.forgotPasswordLink = page.getByText('Forgot your password?');
+    this.csrfError = page.getByText('CSRF token validation failed');
   }
 
   /**
@@ -43,6 +44,18 @@ export class LoginPage {
   }
 
   async login(username: string, password: string) {
+    await this.submitCredentials(username, password);
+
+    // Browser password popups / stale pages can cause CSRF failures — retry once with a fresh token
+    if (await this.csrfError.isVisible().catch(() => false)) {
+      await this.goto();
+      await this.submitCredentials(username, password);
+    }
+  }
+
+  private async submitCredentials(username: string, password: string) {
+    await this.usernameInput.fill('');
+    await this.passwordInput.fill('');
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
     await this.loginButton.click();

@@ -39,8 +39,18 @@ export default defineConfig({
     extraHTTPHeaders: {
       'Accept-Language': 'en-US,en;q=0.9',
     },
+    // Fresh profile every run — do not reuse a Google Chrome profile with Password Manager
     launchOptions: {
-      args: ['--disable-features=Translate,TranslateUI', '--disable-translate'],
+      args: [
+        '--disable-features=Translate,TranslateUI,PasswordLeakDetection,PasswordManagerOnboarding,AutofillServerCommunication,MediaRouter',
+        '--disable-translate',
+        '--disable-save-password-bubble',
+        '--disable-password-generation',
+        '--disable-password-manager-reauthentication',
+        '--password-store=basic',
+        '--no-default-browser-check',
+        '--no-first-run',
+      ],
     },
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -50,8 +60,11 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        // Use Playwright Chromium, not system Google Chrome (avoids Google Password Manager popups)
+        channel: undefined,
+      },
     },
   ],
 });
-

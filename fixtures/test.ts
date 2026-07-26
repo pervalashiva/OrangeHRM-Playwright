@@ -7,11 +7,17 @@ import { test as base, expect } from '@playwright/test';
  */
 export const test = base.extend({
   page: async ({ page }, use) => {
+    // Dismiss JS alert/confirm dialogs so they never block later tests
+    page.on('dialog', async (dialog) => {
+      await dialog.dismiss().catch(() => undefined);
+    });
+
     await page.route(/\/core\/i18n\/messages/, async (route) => {
       const url = new URL(route.request().url());
       url.searchParams.set('locale', 'en_US');
       await route.continue({ url: url.toString() });
     });
+
     await use(page);
   },
 });
