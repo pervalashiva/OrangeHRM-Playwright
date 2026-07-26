@@ -5,7 +5,7 @@
   "scripts": {
     "test": "playwright test",
     "test:suite": "playwright test",
-    "test:headed": "playwright test --headed",
+    "test:headed": "playwright test --headed --workers=1",
     "test:ui": "playwright test --ui",
     "test:launch": "playwright test -g \"should launch the website and open the login page\"",
     "test:valid-login": "playwright test -g \"should login successfully with valid credentials\"",
