@@ -89,7 +89,7 @@ playwright.config.ts              # Base URL, browser, Allure reporter
 | `invalid-credentials` | `test:invalid-login` | Asserts "Invalid credentials" error |
 | `empty-credentials` | `test:empty-credentials` | Asserts Required field messages |
 | `forgot-password` | `test:forgot-password` | Navigates to reset password page |
-| `add-user` | `test:add-user` | Login → Admin → Add User → save + assert |
+| `add-user` | `test:add-user` | Add → search → edit/save → search → delete user |
 | `add-job-title` | `test:add-job-title` | Login → Admin → Job Titles → Add → upload + save |
 
 Demo credentials (public OrangeHRM sample): `Admin` / `admin123`
