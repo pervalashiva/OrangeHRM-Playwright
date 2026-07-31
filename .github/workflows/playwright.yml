@@ -22,6 +22,7 @@ on:
           - forgot-password-cancel
           - dashboard-widgets
           - logout
+          - about-dialog
           - nav-pim
           - nav-leave
           - nav-my-info
@@ -102,6 +103,9 @@ jobs:
               ;;
             logout)
               CMD="npx playwright test -g \"should logout successfully and return to login page\" $HEADED_FLAG"
+              ;;
+            about-dialog)
+              CMD="npx playwright test -g \"should open About dialog from user menu and show product details\" $HEADED_FLAG"
               ;;
             nav-pim)
               CMD="npx playwright test -g \"should open PIM employee list from side menu\" $HEADED_FLAG"

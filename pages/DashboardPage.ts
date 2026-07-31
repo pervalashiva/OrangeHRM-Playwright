@@ -42,4 +42,29 @@ export class DashboardPage {
     await this.logoutLink.click();
     await expect(this.page).toHaveURL(/auth\/login/, { timeout: 30_000 });
   }
+
+  aboutDialog() {
+    return this.page.getByRole('dialog').filter({ hasText: 'About' });
+  }
+
+  async openAboutDialog() {
+    await this.openUserMenu();
+    await this.aboutLink.click();
+    await expect(this.aboutDialog()).toBeVisible({ timeout: 15_000 });
+  }
+
+  async expectAboutDialogDetails() {
+    const dialog = this.aboutDialog();
+    await expect(dialog.getByRole('heading', { name: 'About' })).toBeVisible();
+    await expect(dialog.getByText(/Company Name/i)).toBeVisible();
+    await expect(dialog.getByText('OrangeHRM').first()).toBeVisible();
+    await expect(dialog.getByText(/Version/i)).toBeVisible();
+    await expect(dialog.getByText(/OrangeHRM OS/i)).toBeVisible();
+  }
+
+  async closeAboutDialog() {
+    const dialog = this.aboutDialog();
+    await dialog.locator('button.oxd-dialog-close-button').click();
+    await expect(dialog).toBeHidden({ timeout: 10_000 });
+  }
 }

@@ -15,6 +15,7 @@
     "test:forgot-password-cancel": "playwright test -g \"should return to login when Cancel is clicked on forgot password\"",
     "test:dashboard-widgets": "playwright test -g \"should show core dashboard widgets after login\"",
     "test:logout": "playwright test -g \"should logout successfully and return to login page\"",
+    "test:about": "playwright test -g \"should open About dialog from user menu and show product details\"",
     "test:nav-pim": "playwright test -g \"should open PIM employee list from side menu\"",
     "test:nav-leave": "playwright test -g \"should open Leave module from side menu\"",
     "test:nav-my-info": "playwright test -g \"should open My Info personal details from side menu\"",
