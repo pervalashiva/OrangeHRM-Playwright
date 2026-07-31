@@ -35,6 +35,13 @@ npm run test:valid-login
 npm run test:invalid-login
 npm run test:empty-credentials
 npm run test:forgot-password
+npm run test:forgot-password-cancel
+npm run test:dashboard-widgets
+npm run test:logout
+npm run test:nav-pim
+npm run test:nav-leave
+npm run test:nav-my-info
+npm run test:add-employee
 npm run test:add-user
 npm run test:add-job-title
 ```
@@ -89,6 +96,13 @@ playwright.config.ts              # Base URL, browser, Allure reporter
 | `invalid-credentials` | `test:invalid-login` | Asserts "Invalid credentials" error |
 | `empty-credentials` | `test:empty-credentials` | Asserts Required field messages |
 | `forgot-password` | `test:forgot-password` | Navigates to reset password page |
+| `forgot-password-cancel` | `test:forgot-password-cancel` | Cancel on reset password returns to login |
+| `dashboard-widgets` | `test:dashboard-widgets` | Dashboard shows Time at Work / My Actions / Quick Launch |
+| `logout` | `test:logout` | User menu → Logout returns to login |
+| `nav-pim` | `test:nav-pim` | Side menu opens PIM employee list |
+| `nav-leave` | `test:nav-leave` | Side menu opens Leave module |
+| `nav-my-info` | `test:nav-my-info` | Side menu opens My Info personal details |
+| `add-employee` | `test:add-employee` | PIM → Add Employee → search in list |
 | `add-user` | `test:add-user` | Add → search → edit/save → search → delete user |
 | `add-job-title` | `test:add-job-title` | Login → Admin → Job Titles → Add → upload + save |
 

@@ -54,4 +54,15 @@ test.describe('OrangeHRM Login', () => {
     await expect(page).toHaveURL(/auth\/requestPasswordResetCode/);
     await expect(page.getByRole('heading', { name: 'Reset Password' })).toBeVisible();
   });
+
+  test('should return to login when Cancel is clicked on forgot password', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+
+    await loginPage.goto();
+    await loginPage.forgotPasswordLink.click();
+    await expect(page).toHaveURL(/auth\/requestPasswordResetCode/);
+
+    await page.getByRole('button', { name: 'Cancel' }).click();
+    await loginPage.expectLoginPageLoaded();
+  });
 });
